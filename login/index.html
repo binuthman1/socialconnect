@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SocialConnect</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Pacifico&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #262626;
+      animation: gradientBG 5s ease infinite;
+      background: linear-gradient(-45deg,pink, #f7d65d, #00b4d8,orange,green, #caf0f8);
+      background-size: 400% 400%;
+    }
+    body.white-bg {
+      background: white;
+      animation: none;
+    }
+    @keyframes gradientBG {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    header, .back-header, .nav {
+      background: white;
+      border-bottom: 1px solid #dbdbdb;
+      position: fixed;
+      width: 100%;
+      z-index: 1000;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      top: 0;
+    }
+    header.hidden, .nav.hidden { display: none; }
+    header h1, #loginPage h1, #signupPage h1 {
+      font-family: 'Pacifico', cursive;
+      margin: 0 0 20px 0;
+      font-size: 28px;
+    }
+    .header-icons i, .back-header i {
+      font-size: 22px;
+      margin-left: 15px;
+      cursor: pointer;
+    }
+    .nav {
+      bottom: 0;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+    }
+    .nav button {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    .page {
+      display: none;
+      padding-top: 80px;
+    }
+    .active { display: block; }
+    #loginPage, #signupPage {
+      max-width: 350px;
+      margin: auto;
+      margin-top: 100px;
+      padding: 40px;
+      background: white;
+      border: 1px solid #dbdbdb;
+      border-radius: 8px;
+      box-shadow: 0px 2px 8px rgba(0,0,0,0.05);
+      text-align: center;
+      padding-top: 20px;
+    }
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+    button.primary {
+      background-color: #0095f6;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 14px;
+      width: 100%;
+      margin-top: 10px;
+    }
+    button.primary:hover { background-color: #0077cc; }
+    .back-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      top: 0;
+    }
+    .back-header span {
+      font-weight: bold;
+      font-style: italic;
+      font-size: 18px;
+    }
+
+    /* Profile Page Styles */
+    #profilePage .profile-header {
+      display: flex;
+      padding: 20px;
+      border-bottom: 1px solid #dbdbdb;
+      align-items: center;
+    }
+    .profile-pic {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      margin-right: 20px;
+      cursor: pointer;
+    }
+    .profile-pic img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #dbdbdb;
+    }
+    .profile-pic input {
+      display: none;
+    }
+    .profile-info h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+    .edit-btn {
+      background: none;
+      border: 1px solid #dbdbdb;
+      padding: 6px 12px;
+      margin-top: 6px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .profile-info p {
+      font-size: 14px;
+      color: #555;
+      margin-top: 8px;
+    }
+    .profile-posts {
+      padding: 10px;
+    }
+    .no-posts {
+      text-align: center;
+      color: #999;
+      font-size: 16px;
+      margin-top: 50px;
+    }
+    .post-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+    .post-grid img {
+      width: 100%;
+      height: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+    }
+
+    .profile-stats {
+  display: flex;
+  gap: 20px;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.profile-stats span {
+  text-align: center;
+}
+.edit-btn {
+  background: linear-gradient(135deg, #00b4d8, #0077cc);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  margin-top: 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+.edit-btn:hover {
+  background: linear-gradient(135deg, #0077cc, #00b4d8);
+}
+
+/* Discover Section */
+.discover-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: #2c3e50;
+}
+
+.discover-search {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.discover-input {
+  padding: 0.5rem 1rem;
+  border: 2px solid #ccc;
+  border-radius: 25px;
+  flex: 1;
+  max-width: 400px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.discover-input:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.discover-button {
+  background-color: #3498db;
+  color: #fff;
+  padding: 0.5rem 1.25rem;
+  border: none;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.discover-button:hover {
+  background-color: #2980b9;
+}
+
+.discover-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  padding: 0 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .discover-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+#profileActions button {
+  min-width: 100px;
+  transition: background 0.3s;
+}
+#profileActions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+#profileActions button {
+  padding: 0.5rem 1.25rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.dynamic-btn {
+  padding: 8px 16px;
+  margin-right: 8px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+/* Follow button style */
+#follow-btn {
+  background-color: #3b82f6; /* blue-500 */
+  color: white;
+}
+
+#follow-btn:hover {
+  background-color: #2563eb; /* blue-600 */
+}
+
+/* Message button style */
+.dynamic-btn.message-btn {
+  background-color: #0d4a2f; /* gray-200 */
+  color: #111827; /* gray-900 */
+}
+
+.dynamic-btn.message-btn:hover {
+  background-color: #d1d5db; /* gray-300 */
+}
+
+.full-animated-bg {
+  background: linear-gradient(-45deg, #bba02a, #0b6471, pink, #0b6471,lightgreen, brown,white);
+  background-size: 600% 600%;
+  animation: gradientMove 5s ease infinite;
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
+@keyframes gradientMove {
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}
+}
+
+#chatList .chat-item {
+  display: flex;
+  align-items: center;
+  background-color: rgba(255,255,255,0.1);
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  backdrop-filter: blur(6px);
+  color: rgb(5, 5, 5);
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+#chatList .chat-item:hover {
+  background-color: rgba(255,255,255,0.2);
+  transform: scale(1.02);
+}
+
+.chat-item img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 0.75rem;
+  border: 2px solid rgb(10, 10, 10);
+}
+
+.chat-item .name {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.chat-item .tap-to-chat {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+.chat-header {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 10;
+}
+
+#chatList .hover\:bg-white\/10:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+#chatList img {
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.3);
+}
+
+.friend-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  backdrop-filter: blur(6px);
+}
+
+.friend-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.02);
+}
+
+.friend-item img {
+  width: 50px;
+  height: 50px;
+  border-radius: 9999px;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.friend-info {
+  display: flex;
+  flex-direction: column;
+  color: rgb(19, 18, 18);
+}
+
+.friend-name {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.friend-hint {
+  font-size: 0.85rem;
+  color: rgba(9, 9, 9, 0.6);
+  font-style: italic;
+}
+
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+    }
+   .chat-header {
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.4);
+      color: rgb(12, 12, 12);
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.2rem;
+    }
+
+ .chat-messages {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  overflow-y: auto;
+  height: calc(100vh - 160px);
+}
+
+.chat-messages .sent,
+.chat-messages .received {
+  max-width: 60%;
+  font-size: 0.75rem;           /* Smaller text */
+  line-height: 1.2rem;          /* Compact line height */
+  padding: 6px 10px;            /* Slim padding */
+  margin: 4px 0;
+  border-radius: 1rem;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  word-wrap: break-word;
+  background-color: rgba(255, 255, 255, 0.08); /* Transparent feel */
+}
+
+.chat-messages .sent {
+  align-self: flex-end;
+  background-color: rgba(0, 123, 255, 0.2);    /* Blue-ish bubble */
+  text-align: right;
+}
+
+.chat-messages .received {
+  align-self: flex-start;
+  background-color: rgba(0, 0, 0, 0.2);        /* Dark bubble for incoming */
+  text-align: left;
+}
+
+
+
+
+    
+
+    .chat-input-area {
+      display: flex;
+      padding: 0.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      gap: 0.5rem;
+    }
+
+    #chatInput {
+      flex: 1;
+      padding: o.6rem;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      font-family: 'Comic Sans MS', cursive;
+      width: 520px;
+    }
+
+    #sendBtn {
+      padding: 0.6rem 1rem;
+      border-radius: 20px;
+      background-color: #0066ff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    #sendBtn:hover {
+      background-color: #004ecc;
+    }
+.friend-item {
+  @apply flex items-center gap-4 p-3 rounded-xl bg-white/10 hover:bg-white/20 cursor-pointer transition duration-200;
+}
+
+.friend-item img {
+  @apply w-12 h-12 rounded-full object-cover shadow-md border border-white/20;
+}
+
+.friend-info {
+  @apply flex flex-col;
+}
+
+.friend-name {
+  @apply text-white font-semibold text-base leading-5;
+}
+
+.friend-hint {
+  @apply text-white/70 text-sm italic;
+}
+.chat-top-header {
+  text-align: center;
+  font-size: 2rem;
+  font-family: 'Pacifico',cursive;
+  color: rgb(7, 7, 7);
+  padding: 1rem 0 0.5rem;
+}
+
+/* Chat header row */
+.chat-sub-header {
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgb(15, 14, 14);
+}
+
+
+#chatStatus {
+  font-size: 0.75rem;
+  color: #040404b3;
+  font-style: italic;
+}
+
+.message p {
+  font-family: 'Segoe UI Emoji', cursive, sans-serif;
+}
+.story-scroll-container {
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
+  gap: 1rem;
+  padding: 1rem 1rem 0;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+#otherStories {
+  display: flex;
+  gap: 1rem;
+}
+
+.story-container {
+  flex: 0 0 auto;
+  text-align: center;
+}
+
+.story-profile {
+  position: relative;
+  width: 64px;   /* Smaller width */
+  height: 64px;  /* Smaller height */
+}
+
+.story-profile img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid white;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+.story-add-btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 18px;
+  height: 18px;
+  background-color: #2563eb;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid white;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+
+  .story-label {
+    margin-top: 0.3rem;
+    font-size: 0.8rem;
+    font-family: cursive;
+    text-align: center;
+    color: wheat;
+  }
+
+  </style>
+</head>
+<body>
+
+<header id="mainHeader" class="hidden">
+  <h1>SocialConnect</h1>
+  <div class="header-icons">
+    <i class="bi bi-chat" onclick="showChatListPage()"></i>
+    <i class="bi bi-box-arrow-right" onclick="logout()"></i>
+  </div>
+</header>
+
+<div id="loginPage" class="page active">
+  <h1>SocialConnect</h1>
+  <h2>Login</h2>
+  <input type="text" id="login-username" placeholder="Username" />
+  <input type="password" id="login-password" placeholder="Password" />
+  <button class="primary" onclick="login()">Login</button>
+  <p>Don't have an account? <a href="#" onclick="showPage('signupPage')">Sign up</a></p>
+</div>
+
+<div id="signupPage" class="page">
+  <h1>SocialConnect</h1>
+  <h2>Sign Up</h2>
+  <input type="text" id="signup-username" placeholder="Username" />
+  <input type="password" id="signup-password" placeholder="Password" />
+  <button class="primary" onclick="signup()">Sign Up</button>
+  <p>Already have an account? <a href="#" onclick="showPage('loginPage')">Login</a></p>
+</div>
+
+<!-- Home Page -->
+<div id="homePage" class="page full-animated-bg">
+<div class="story-scroll-container">
+  <!-- Your story will be inserted here -->
+  
+</div>
+<div id="otherStories" class="flex gap-4"></div>
+
+
+</div>
+
+
+
+
+
+
+<!-- Chat List Page -->
+<div id="chatListPage" class="page hidden full-animated-bg">
+  <div class="chat-top-header">SocialConnect</div>
+  <div class="chat-sub-header">
+    <i class="bi bi-arrow-left text-xl cursor-pointer" onclick="showPage('homePage')"></i>
+    <span class="text-lg font-semibold">Messages</span>
+  </div>
+  <div id="chatList" class="flex flex-col gap-3 p-4"></div>
+</div>
+
+</div>
+
+<!-- Chat Conversation Page -->
+<div id="chatPage" class="page hidden full-animated-bg flex flex-col">
+  <!-- Header -->
+  <div class="chat-header">
+    <i class="bi bi-arrow-left text-xl cursor-pointer" onclick="showChatListPage()"></i>
+    <span id="chatUsername" class="text-lg font-semibold"></span>
+      <span id="chatStatus" class="text-sm text-white/70 italic"></span>
+  </div>
+
+  <!-- Messages Container -->
+  <div id="chatMessages" class="chat-messages"></div>
+  
+
+  <!-- Input Field -->
+  <div class="chat-input-area ">
+    <input id="chatInput" type="text" placeholder="Type a message..."
+      id="chatInput"/>
+    <button onclick="sendMessage()" id="sendBtn">
+      Send
+    </button>
+  </div>
+</div>
+
+
+
+
+<!-- Notification Page -->
+<div id="notificationPage" class="page hidden full-animated-bg">
+  <div class="chat-header text-white border-b border-white/20 flex items-center justify-between p-3">
+    <div class="flex items-center gap-3">
+      <i class="bi bi-arrow-left text-xl cursor-pointer" onclick="showPage('homePage')"></i>
+      <span class="text-lg font-semibold">Notifications</span>
+    </div>
+  </div>
+  <div id="notificationList" class="p-4 text-white flex flex-col gap-4">
+    <!-- Notifications will be injected here -->
+  </div>
+</div>
+
+<div id="profilePage" class="page">
+  <div class="back-header">
+    <i class="bi bi-arrow-left" onclick="showPage('homePage')"></i>
+    <span>Profile</span>
+  </div>
+  <div class="profile-header">
+    <div class="profile-pic" onclick="document.getElementById('profile-pic-input').click();">
+      <img id="profileImage" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Profile Picture" />
+      <input type="file" id="profile-pic-input" accept="image/*" onchange="changeProfilePic()" />
+    </div>
+    <div class="profile-info">
+<h2 id="profile-username">Username</h2>
+      <div class="profile-stats">
+  <span><strong id="profile-post-count">0</strong> posts</span>
+  <span><strong id="profile-follower-count">0</strong> followers</span>
+  <span><strong id="profile-following-count">0</strong> following</span>
+</div>
+<p id="profile-bio">i'm new here.</p>
+<button class="edit-btn" onclick="editProfile()">✏️ Edit Profile</button>
+<div id="profileActions" class="flex gap-2 mt-3"></div>
+
+
+
+
+    </div>
+  </div>
+  <div class="profile-posts" id="profilePostsContainer">
+    <p class="no-posts"><i class="bi bi-camera" style="font-size: 64px;"></i><br>No Posts Yet</p>
+  </div>
+</div>
+
+<div id="mainNav" class="nav hidden">
+  <button onclick="showPage('homePage')"><i class="bi bi-house"></i></button>
+  <button onclick="showPage('discoverPage')"><i class="bi bi-search"></i></button>
+  <button onclick="showPage('createPage')"><i class="bi bi-plus-square"></i></button>
+  <button onclick="showPage('profilePage')"><i class="bi bi-person"></i></button>
+</div>
+<!--.....................................discover.................................-->
+
+<div id="discoverPage" class="page hidden">
+  <h2 class="discover-title">Discover</h2>
+
+  <div class="discover-search">
+    <input id="searchUsername" type="text" placeholder="Search by username" class="discover-input" />
+    <button onclick="viewOtherUser()" class="discover-button">Search</button>
+  </div>
+
+  <div id="discoverPosts" class="discover-grid">
+    <!-- Public posts from all users will be shown here -->
+  </div>
+</div>
+
+
+
+
+<!-- Add inside <body>, after #profilePage but before #mainNav -->
+<div id="createPage" class="page">
+  <div class="back-header">
+    <i class="bi bi-arrow-left" onclick="showPage('homePage')"></i>
+    <span>Create Post</span>
+  </div>
+  <div style="padding: 20px; max-width: 500px; margin: auto;">
+    <label style="font-weight: bold;">Upload Image</label>
+    <input type="file" accept="image/*" id="postImageInput" onchange="previewPostImage()" style="width: 100%; margin-bottom: 15px;" />
+    
+    <label style="font-weight: bold;">Caption</label>
+    <textarea id="postCaption" placeholder="Write a caption..." style="width: 100%; height: 80px; border-radius: 8px; padding: 8px; border: 1px solid #ccc; resize: none; margin-bottom: 15px;"></textarea>
+    
+    <div id="postImagePreview" style="margin-bottom: 15px;"></div>
+    
+    <button class="primary" style="width: 100%; padding: 12px; font-size: 16px;" onclick="submitPost()">Post</button>
+  </div>
+</div>
+
+<div id="postModal" style="display: none; position: fixed; top: 0; left: 0; 
+  width: 100%; height: 100%; background: rgba(0,0,0,0.8); 
+  justify-content: center; align-items: center; z-index: 2000;">
+  <div style="background: white; max-width: 500px; width: 90%; border-radius: 10px; overflow: hidden;">
+    <img id="modalPostImage" style="width: 100%; max-height: 300px; object-fit: cover;" />
+    <div style="padding: 15px;">
+      <p id="modalPostCaption"></p>
+      <button id="likeBtn" onclick="toggleLike()" style="margin-bottom: 10px;">❤️ Like</button>
+      <p><strong id="likeCount">0</strong> likes</p>
+      <div id="commentsContainer" style="margin-top: 10px;"></div>
+<div style="display: flex; gap: 8px; margin-top: 10px;">
+  <input type="text" id="commentInput" placeholder="Add a comment..." 
+    style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 5px;" />
+  <button onclick="addComment()" style="padding: 8px 12px; border: none; background-color: #007bff; color: white; border-radius: 5px;">
+    Send
+  </button>
+</div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+let chatRefreshInterval = null;
+let currentChatUser = null;
+let viewingUser = null;
+let lastPage = null;
+let lastViewedUser = null;
+let chatOrigin = null;
+
+
+
+function showPage(pageId, user = null, origin = null) {
+  const currentPage = document.querySelector('.page.active')?.id;
+  if (currentPage && currentPage !== pageId) {
+    lastPage = currentPage;
+  }
+
+  // Track chat origin
+  if (pageId === 'chatPage') {
+    chatOrigin = origin || lastPage;
+  }
+
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+
+  const hideNavPages = ['loginPage', 'signupPage', 'chatPage','chatListPage','notificationPage'];
+  const hideHeaderPages = ['loginPage', 'signupPage', 'chatPage', 'notificationPage'];
+
+  document.getElementById('mainNav').classList.toggle('hidden', hideNavPages.includes(pageId));
+  document.getElementById('mainHeader').classList.toggle('hidden', pageId !== 'homePage');
+
+  if (pageId === 'homePage') loadHome();
+  if (pageId === 'profilePage') {
+    viewingUser = user || localStorage.getItem('currentUser');
+    loadProfile();
+  }
+
+  if (pageId === 'loginPage' || pageId === 'signupPage') {
+    document.body.classList.remove('white-bg');
+  } else {
+    document.body.classList.add('white-bg');
+  }
+  if (pageId === 'chatListPage') loadChatList();
+
+}
+
+
+
+
+
+  function signup() {
+    const user = document.getElementById('signup-username').value.trim();
+    const pass = document.getElementById('signup-password').value.trim();
+    if (!user || !pass) return alert("Please fill in both fields.");
+
+    let users = JSON.parse(localStorage.getItem('users') || '{}');
+    if (users[user]) {
+      alert('Username already exists.');
+    } else {
+      users[user] = pass;
+      localStorage.setItem('users', JSON.stringify(users));
+      alert('Account created successfully!');
+      showPage('loginPage');
+    }
+  }
+
+  function login() {
+    const user = document.getElementById('login-username').value.trim();
+    const pass = document.getElementById('login-password').value.trim();
+    let users = JSON.parse(localStorage.getItem('users') || '{}');
+    if (!users[user]) {
+      alert("Account does not exist.");
+    } else if (users[user] !== pass) {
+      alert("Incorrect password.");
+    } else {
+      localStorage.setItem('currentUser', user);
+      showPage('homePage');
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem('currentUser');
+    showPage('loginPage');
+  }
+
+
+function loadHome() {
+    const user = localStorage.getItem('currentUser');
+    const storyScroll = document.querySelector('.story-scroll-container');
+    if (!storyScroll) return;
+
+    storyScroll.innerHTML = '';
+    const profilePic = localStorage.getItem(`${user}_profilePic`) || 'default.png';
+
+    const yourStory = document.createElement('div');
+    yourStory.className = 'inline-block mr-4 story-container';
+yourStory.innerHTML = `
+  <div class="story-profile" onclick="viewStories('${user}')">
+    <img src="${profilePic}" alt="Your Story" />
+    <div class="story-add-btn" onclick="event.stopPropagation(); addStory()">+</div>
+  </div>
+  <div class="story-label">Your Story</div>
+`;
+
+    storyScroll.appendChild(yourStory);
+
+    renderOtherStories();
+  }
+
+function addStory() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
+  input.onchange = () => {
+    const file = input.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const user = localStorage.getItem('currentUser');
+        const stories = JSON.parse(localStorage.getItem('stories') || '[]');
+
+ stories.unshift({
+  user: localStorage.getItem('currentUser'),
+  image: reader.result,
+  timestamp: Date.now()
+});
+
+
+        localStorage.setItem('stories', JSON.stringify(stories));
+        loadHome(); // or renderOtherStories(), depending on your flow
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  input.click();
+}
+
+
+function filterRecentStories(stories) {
+  const oneHourAgo = Date.now() - 3600000;
+  return stories.filter(story => story.timestamp > oneHourAgo);
+}
+
+
+function renderOtherStories() {
+  const storyScroll = document.querySelector('.story-scroll-container');
+  if (!storyScroll) return;
+
+  const currentUser = localStorage.getItem('currentUser');
+  const following = JSON.parse(localStorage.getItem(`${currentUser}_following`) || '[]');
+  const followers = JSON.parse(localStorage.getItem(`${currentUser}_followers`) || '[]');
+  const stories = filterRecentStories(JSON.parse(localStorage.getItem('stories') || '[]'));
+
+  const visibleUsers = [...new Set([...following, ...followers])].filter(user => user !== currentUser);
+  const shownUsers = new Set();
+
+  stories.forEach(story => {
+    if (visibleUsers.includes(story.user) && !shownUsers.has(story.user)) {
+      const div = document.createElement('div');
+      div.className = 'inline-block story-container';
+      div.innerHTML = `
+        <div class="story-profile" onclick="viewStories('${story.user}')">
+          <img src="${story.image}" alt="${story.user}" />
+        </div>
+        <div class="story-label">${story.user}</div>
+      `;
+      storyScroll.appendChild(div);
+      shownUsers.add(story.user);
+    }
+  });
+}
+
+
+
+function viewStories(username) {
+  const stories = filterRecentStories(
+    JSON.parse(localStorage.getItem('stories') || '[]')
+  ).filter(s => s.user === username);
+
+  if (stories.length === 0) return;
+
+  let current = 0;
+  const duration = 5000; // 5 seconds per story
+
+  const viewer = document.createElement('div');
+  viewer.id = 'storyModal';
+  viewer.style.cssText = `
+    position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    z-index: 9999;
+    padding-top: 2rem;
+  `;
+
+  const closeBtn = document.createElement('div');
+  closeBtn.textContent = '✕';
+  closeBtn.style.cssText = `
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    z-index: 10000;
+  `;
+  closeBtn.onclick = () => viewer.remove();
+  viewer.appendChild(closeBtn);
+
+  const progressBarContainer = document.createElement('div');
+  progressBarContainer.style.cssText = `
+    display: flex;
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    gap: 5px;
+    z-index: 9999;
+  `;
+
+  const progressBars = stories.map(() => {
+    const bar = document.createElement('div');
+    bar.style.cssText = `
+      flex: 1;
+      height: 4px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 4px;
+      overflow: hidden;
+    `;
+    const fill = document.createElement('div');
+    fill.style.cssText = `
+      width: 0%;
+      height: 100%;
+      background: white;
+      transition: width ${duration}ms linear;
+      border-radius: 4px;
+    `;
+    bar.appendChild(fill);
+    progressBarContainer.appendChild(bar);
+    return fill;
+  });
+
+  const img = document.createElement('img');
+  img.style.cssText = 'max-height: 80%; max-width: 80%; border-radius: 1rem; box-shadow: 0 0 30px rgba(0,0,0,0.5);';
+  viewer.appendChild(progressBarContainer);
+  viewer.appendChild(img);
+  document.body.appendChild(viewer);
+
+  function showStory(index) {
+    img.src = stories[index].image;
+    progressBars[index].style.width = '0%';
+    void progressBars[index].offsetWidth; // reflow
+    progressBars[index].style.width = '100%';
+
+    setTimeout(() => {
+      if (index + 1 < stories.length) {
+        showStory(index + 1);
+      } else {
+        viewer.remove();
+      }
+    }, duration);
+  }
+
+  showStory(current);
+}
+
+  window.onload = () => {
+    showPage('homePage');
+    loadHome();
+    setInterval(renderOtherStories, 5000);
+  };
+
+function loadProfile() {
+  const currentUser = localStorage.getItem('currentUser');
+  const isOwnProfile = viewingUser === currentUser;
+
+  document.getElementById('profile-username').textContent = viewingUser;
+
+  const bio = localStorage.getItem(`${viewingUser}_bio`) || 'This is your bio.';
+  document.getElementById('profile-bio').textContent = bio;
+
+  const profilePic = localStorage.getItem(`${viewingUser}_profilePic`);
+  if (profilePic) {
+    document.getElementById('profileImage').src = profilePic;
+  }
+
+  // Clear previous buttons
+  const btnContainer = document.querySelector('.profile-info');
+  btnContainer.querySelectorAll('.dynamic-btn').forEach(btn => btn.remove());
+
+  // Show Edit if it's your own profile
+  if (isOwnProfile) {
+    document.querySelector('.edit-btn').style.display = 'inline-block';
+  } else {
+    document.querySelector('.edit-btn').style.display = 'none';
+
+    // Follow button
+    let followBtn = document.createElement('button');
+    followBtn.id = 'follow-btn';
+    followBtn.className = 'dynamic-btn bg-blue-500 text-white px-3 py-1 rounded mr-2';
+    followBtn.onclick = toggleFollow;
+    btnContainer.appendChild(followBtn);
+    updateFollowButton();
+
+    // Message button
+    let msgBtn = document.createElement('button');
+    msgBtn.className = 'dynamic-btn message-btn';
+    msgBtn.textContent = 'Message';
+    msgBtn.onclick = goToChat;
+    btnContainer.appendChild(msgBtn);
+  }
+
+  updateFollowCounts();
+  loadUserPosts();
+}
+
+
+
+
+
+  function updateFollowCounts() {
+    const user = localStorage.getItem('currentUser');
+    const followers = JSON.parse(localStorage.getItem(`${viewingUser}_followers`) || '[]');
+    const following = JSON.parse(localStorage.getItem(`${viewingUser}_following`) || '[]');
+    const postCount = JSON.parse(localStorage.getItem(`${viewingUser}_posts`) || '[]').length;
+
+    document.getElementById('profile-post-count').textContent = postCount;
+    document.getElementById('profile-follower-count').textContent = followers.length;
+    document.getElementById('profile-following-count').textContent = following.length;
+  }
+
+  function updateFollowButton() {
+    const user = localStorage.getItem('currentUser');
+    const followers = JSON.parse(localStorage.getItem(`${viewingUser}_followers`) || '[]');
+    const btn = document.getElementById('follow-btn');
+
+    if (followers.includes(user)) {
+      btn.textContent = 'Unfollow';
+      btn.style.background = '#ccc';
+      btn.style.color = '#333';
+    } else {
+      btn.textContent = 'Follow';
+      btn.style.background = '#0095f6';
+      btn.style.color = 'white';
+    }
+  }
+
+  function toggleFollow() {
+    const user = localStorage.getItem('currentUser');
+    let followers = JSON.parse(localStorage.getItem(`${viewingUser}_followers`) || '[]');
+    let userFollowing = JSON.parse(localStorage.getItem(`${user}_following`) || '[]');
+
+    const isFollowing = followers.includes(user);
+
+    if (isFollowing) {
+      followers = followers.filter(u => u !== user);
+      userFollowing = userFollowing.filter(u => u !== viewingUser);
+    } else {
+      followers.push(user);
+      userFollowing.push(viewingUser);
+    }
+
+    localStorage.setItem(`${viewingUser}_followers`, JSON.stringify(followers));
+    localStorage.setItem(`${user}_following`, JSON.stringify(userFollowing));
+    updateFollowButton();
+    updateFollowCounts();
+  }
+
+  function editProfile() {
+    const bio = prompt("Enter new bio:");
+    if (bio !== null) {
+      const user = localStorage.getItem('currentUser');
+      localStorage.setItem(`${user}_bio`, bio);
+      document.getElementById('profile-bio').textContent = bio;
+    }
+  }
+
+  function changeProfilePic() {
+    const fileInput = document.getElementById('profile-pic-input');
+    const file = fileInput.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const user = localStorage.getItem('currentUser');
+      localStorage.setItem(`${user}_profilePic`, e.target.result);
+      document.getElementById('profileImage').src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+function loadUserPosts() {
+  const posts = JSON.parse(localStorage.getItem(`${viewingUser}_posts`) || '[]');
+  const container = document.getElementById('profilePostsContainer');
+  container.innerHTML = '';
+
+  if (posts.length === 0) {
+    container.innerHTML = `<p class="no-posts"><i class="bi bi-camera" style="font-size: 64px;"></i><br>No Posts Yet</p>`;
+    return;
+  }
+
+  const grid = document.createElement('div');
+  grid.className = 'post-grid';
+
+  posts.forEach((post, index) => {
+    const img = document.createElement('img');
+    img.src = post.image;
+    img.onclick = () => openPostModal(viewingUser, index);
+    grid.appendChild(img);
+  });
+
+  container.appendChild(grid);
+}
+
+  window.onload = () => {
+    const user = localStorage.getItem('currentUser');
+    if (user) showPage('homePage');
+    else showPage('loginPage');
+  };
+
+  function previewPostImage() {
+  const fileInput = document.getElementById('postImageInput');
+  const preview = document.getElementById('postImagePreview');
+  const file = fileInput.files[0];
+  if (!file) return preview.innerHTML = '';
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    preview.innerHTML = `<img src="${e.target.result}" style="max-width: 100%; max-height: 300px; border-radius: 10px;" />`;
+  };
+  reader.readAsDataURL(file);
+}
+
+function submitPost() {
+  const fileInput = document.getElementById('postImageInput');
+  const file = fileInput.files[0];
+  const caption = document.getElementById('postCaption').value.trim();
+
+  if (!file) return alert("Please select an image.");
+
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const user = localStorage.getItem('currentUser');
+    const newPost = {
+      image: e.target.result,
+      caption,
+      likes: [],
+      comments: [],
+      createdAt: Date.now()
+    };
+
+    let posts = JSON.parse(localStorage.getItem(`${user}_posts`) || '[]');
+    posts.unshift(newPost); // Add new post at the beginning
+    localStorage.setItem(`${user}_posts`, JSON.stringify(posts));
+
+    showPage('profilePage');
+  };
+  reader.readAsDataURL(file);
+}
+
+
+function deletePost(index) {
+  const user = localStorage.getItem('currentUser');
+  let posts = JSON.parse(localStorage.getItem(`${user}_posts`) || '[]');
+  if (confirm('Are you sure you want to delete this post?')) {
+    posts.splice(index, 1);
+    localStorage.setItem(`${user}_posts`, JSON.stringify(posts));
+    loadUserPosts();
+  }
+}
+
+let modalPostIndex = null;
+let modalPostOwner = null;
+
+function openPostModal(user, index) {
+  modalPostIndex = index;
+  modalPostOwner = user;
+
+  const posts = JSON.parse(localStorage.getItem(`${user}_posts`) || '[]');
+  const post = posts[index];
+
+  document.getElementById('modalPostImage').src = post.image;
+  document.getElementById('modalPostCaption').textContent = post.caption;
+  document.getElementById('likeCount').textContent = post.likes.length;
+
+  const currentUser = localStorage.getItem('currentUser');
+  document.getElementById('likeBtn').textContent = post.likes.includes(currentUser) ? '💔 Unlike' : '❤️ Like';
+
+  const commentsContainer = document.getElementById('commentsContainer');
+  commentsContainer.innerHTML = '';
+  post.comments.forEach(c => {
+    const p = document.createElement('p');
+    p.innerHTML = `<strong>${c.user}:</strong> ${c.text}`;
+    commentsContainer.appendChild(p);
+  });
+
+  document.getElementById('postModal').style.display = 'flex';
+}
+
+function toggleLike() {
+  const currentUser = localStorage.getItem('currentUser');
+  const posts = JSON.parse(localStorage.getItem(`${modalPostOwner}_posts`) || '[]');
+  const post = posts[modalPostIndex];
+
+  const index = post.likes.indexOf(currentUser);
+  if (index >= 0) {
+    post.likes.splice(index, 1);
+  } else {
+    post.likes.push(currentUser);
+  }
+
+  localStorage.setItem(`${modalPostOwner}_posts`, JSON.stringify(posts));
+  openPostModal(modalPostOwner, modalPostIndex); // Re-render modal
+}
+
+function addComment() {
+  const input = document.getElementById('commentInput');
+  const text = input.value.trim();
+  if (!text) return;
+
+  const currentUser = localStorage.getItem('currentUser');
+  const posts = JSON.parse(localStorage.getItem(`${modalPostOwner}_posts`) || '[]');
+  const post = posts[modalPostIndex];
+
+  post.comments.push({ user: currentUser, text });
+  localStorage.setItem(`${modalPostOwner}_posts`, JSON.stringify(posts));
+
+  input.value = '';
+  openPostModal(modalPostOwner, modalPostIndex); // Re-render modal
+}
+
+// Close modal on outside click
+document.getElementById('postModal').onclick = function(e) {
+  if (e.target.id === 'postModal') this.style.display = 'none';
+}
+
+function viewOtherUser() {
+  const username = document.getElementById('searchUsername').value.trim();
+  if (!username) return alert("Enter a username");
+  if (!localStorage.getItem(`user_${username}`)) {
+    return alert("User not found");
+  }
+  showPage('profilePage', username);
+}
+function openChatWith(username) {
+  localStorage.setItem('chatWith', username);
+  showPage('chatPage');
+
+  const chatHeader = document.querySelector('#chatPage .back-header span');
+  if (chatHeader) {
+    chatHeader.textContent = `Chat with ${username}`;
+  }
+
+  // Optional: clear or load chat history
+}
+
+function loadChat(username) {
+  document.getElementById('chatUsername').textContent = username;
+  // Future: load message history here
+}
+
+
+function handleChatBack() {
+  if (chatOrigin === 'profilePage') {
+    showPage('profilePage', viewingUser);
+  } else {
+    showPage('homePage');
+  }
+}
+
+
+function goToChat() {
+  lastViewedUser = viewingUser; // Save this before going to chat
+  showPage('chatPage');
+}
+
+
+  function loadChatList() {
+    const currentUser = localStorage.getItem('currentUser');
+    const chatList = document.getElementById('chatList');
+    chatList.innerHTML = '';
+
+    const followers = JSON.parse(localStorage.getItem(`${currentUser}_followers`) || '[]');
+    const following = JSON.parse(localStorage.getItem(`${currentUser}_following`) || '[]');
+    const friendsSet = new Set([...followers, ...following]);
+
+    friendsSet.forEach(friend => {
+      if (friend === currentUser) return;
+
+      const profilePic = localStorage.getItem(`${friend}_profilePic`) || 'default.png';
+
+      const friendDiv = document.createElement('div');
+      friendDiv.className = 'flex items-center gap-3 p-3 rounded-lg bg-white/10 hover:bg-white/20 cursor-pointer';
+      friendDiv.onclick = () => openChatWith(friend);
+
+      friendDiv.className = 'friend-item';
+friendDiv.innerHTML = `
+  <img src="${profilePic}" alt="${friend}" />
+  <div class="friend-info">
+    <span class="friend-name">${friend}</span>
+    <span class="friend-hint">Tap to chat!</span>
+  </div>
+`;
+
+
+
+
+      chatList.appendChild(friendDiv);
+    });
+  }
+function openChatWith(friend) {
+  currentChatUser = friend;
+  const usernameEl = document.getElementById('chatUsername');
+  usernameEl.textContent = friend;
+
+  // 🔍 Show online/offline/last seen
+  let statusText = 'Offline';
+  const lastSeenKey = `${friend}_lastSeen`;
+  const lastSeen = localStorage.getItem(lastSeenKey);
+
+  if (lastSeen) {
+    const diff = Date.now() - parseInt(lastSeen);
+    if (diff < 5 * 60 * 1000) {
+      statusText = 'Online';
+    } else {
+      const time = new Date(parseInt(lastSeen)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      statusText = `Last seen at ${time}`;
+    }
+  }
+
+  // Display status (below name or beside it)
+  let statusEl = document.getElementById('chatStatus');
+  if (!statusEl) {
+    statusEl = document.createElement('div');
+    statusEl.id = 'chatStatus';
+    statusEl.className = 'text-sm text-white/70 italic';
+    usernameEl.after(statusEl);
+  }
+  statusEl.textContent = statusText;
+
+   if (chatRefreshInterval) clearInterval(chatRefreshInterval);
+  chatRefreshInterval = setInterval(() => {
+    loadChatMessages();
+  }, 3000); 
+
+  showPage('chatPage');
+  loadChatMessages();
+  document.getElementById('chatInput').focus();
+}
+
+  function loadChatMessages() {
+    const currentUser = localStorage.getItem('currentUser');
+    if (!currentChatUser || !currentUser) return;
+
+    const users = [currentUser, currentChatUser].sort();
+    const key = `chat_${users[0]}_${users[1]}`;
+
+    const messages = JSON.parse(localStorage.getItem(key) || '[]');
+    renderChatMessages(messages);
+  }
+
+function renderChatMessages(messages) {
+  const container = document.getElementById('chatMessages');
+  container.innerHTML = '';
+
+  const currentUser = localStorage.getItem('currentUser');
+
+  messages.forEach(msg => {
+    const div = document.createElement('div');
+    div.className = 'message ' + (msg.sender === currentUser ? 'sent' : 'received');
+
+    const time = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const receipt = msg.sender === currentUser ? '✓✓' : '';
+    
+
+    div.innerHTML = `
+      <p>${msg.text}</p>
+      <span class="timestamp">${time} ${receipt}</span>
+    `;
+
+    container.appendChild(div);
+  });
+
+  container.scrollTop = container.scrollHeight;
+}
+function sendMessage() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text || !currentChatUser) return;
+
+  const currentUser = localStorage.getItem('currentUser');
+
+  // 🕒 Save last active timestamp
+  localStorage.setItem(`${currentUser}_lastSeen`, Date.now().toString());
+
+  const users = [currentUser, currentChatUser].sort();
+  const key = `chat_${users[0]}_${users[1]}`;
+  const messages = JSON.parse(localStorage.getItem(key) || '[]');
+
+  messages.push({
+    sender: currentUser,
+    text,
+    timestamp: Date.now(),
+    read: true
+  });
+
+  localStorage.setItem(key, JSON.stringify(messages));
+  input.value = '';
+  loadChatMessages();
+}
+
+
+function showChatListPage() {
+  clearInterval(chatRefreshInterval);
+  showPage('chatListPage');
+  loadChatList();
+}
+
+function loadNotifications() {
+  const currentUser = localStorage.getItem('currentUser');
+  const notificationList = document.getElementById('notificationList');
+  notificationList.innerHTML = '';
+
+  const notifications = JSON.parse(localStorage.getItem(`${currentUser}_notifications`) || '[]');
+
+  if (notifications.length === 0) {
+    notificationList.innerHTML = '<p class="text-white/70 italic">No notifications yet.</p>';
+    return;
+  }
+
+  notifications.forEach(note => {
+    const div = document.createElement('div');
+    div.className = 'bg-white/10 p-3 rounded-lg shadow';
+    div.innerHTML = `
+      <p class="font-[cursive]">${note.message}</p>
+      <span class="text-xs text-white/50 block mt-1">${new Date(note.time).toLocaleString()}</span>
+    `;
+    notificationList.appendChild(div);
+  });
+}
+
+function showNotificationPage() {
+  showPage('notificationPage');
+  loadNotifications();
+}
+
+
+</script>
+
+</script>
+</body>
+</html>
